@@ -57,7 +57,22 @@ This repository provides comprehensive planning and architecture documentation f
 - Examples for all endpoints
 - Support for JSON and YAML content types
 
-### 3. TypeScript Client Architecture (30 KB, 1,234 lines)
+### 3. API Reference (Executive Overview & Endpoint Index)
+**File**: [`api-reference.md`](./api-reference.md)
+
+**Contents**:
+- Executive overview of the REST API design
+- Key concepts table (Database, Table, Record, Branch, Commit)
+- Design highlights: auth, pagination, filtering, merge strategies
+- Complete endpoint index organized by category (24 endpoints)
+- Summary table with auth requirements
+
+**Key Features**:
+- Quick-reference companion to the full OpenAPI spec
+- Every endpoint listed with method, path, operation ID, and one-line summary
+- Readable without needing to parse YAML
+
+### 4. TypeScript Client Architecture (30 KB, 1,234 lines)
 **File**: [`ingitdb-ts-architecture.md`](./ingitdb-ts-architecture.md)
 
 **Contents**:
