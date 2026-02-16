@@ -1600,16 +1600,20 @@ Documentation:
 
 ### Phase 2: Server Implementation (Weeks 3-6)
 **Agent: Server Backend Developer**
-1. Set up project structure
+1. Set up project structure (ingitdb-go with `serve` command)
 2. Generate server boilerplate from OpenAPI spec
 3. Implement database operations
-4. Implement table operations
+4. Implement table operations with schema versioning
 5. Implement record CRUD operations
-6. Implement version control features
+6. Implement version control features with conflict resolution
 7. Add authentication and authorization
 8. Add validation and error handling
-9. Write comprehensive tests
-10. Create Docker configuration
+9. Implement configuration management (.ingitdb.yaml)
+10. Add Prometheus metrics endpoint
+11. Add structured logging
+12. Add health check endpoints
+13. Write comprehensive tests
+14. Create Docker configuration
 
 **Parallel Task - Agent: Testing & QA Engineer**
 1. Set up testing infrastructure
@@ -1618,7 +1622,11 @@ Documentation:
 4. Set up integration test environment
 
 **Deliverables**:
-- ✅ Working server implementation
+- ✅ Working server implementation (as `serve` command)
+- ✅ Schema versioning system
+- ✅ Conflict resolution for merges
+- ✅ Configuration management
+- ✅ Metrics and logging
 - ✅ Test suite (80%+ coverage)
 - ✅ Docker image
 - ✅ Deployment guide
@@ -1633,6 +1641,11 @@ Documentation:
 4. Add error handling and retry logic
 5. Write documentation and examples
 6. Publish to NPM as beta
+
+**Parallel Task - Agent: Server Backend Developer**
+1. Add CLI autocomplete support (bash, zsh, fish)
+2. Implement interactive CLI mode (optional)
+3. Enhance CLI documentation
 
 **Parallel Task - Agent: Testing & QA Engineer**
 1. Create client test suite
@@ -1671,7 +1684,10 @@ Documentation:
 3. Write API reference
 4. Create architecture documentation
 5. Write migration guides
-6. Create video tutorials
+6. Write backup and restore procedures
+7. Write disaster recovery guide
+8. Create troubleshooting guide
+9. Create video tutorials
 
 **Parallel Task - All Agents**
 1. Code review and refactoring
@@ -1681,6 +1697,8 @@ Documentation:
 
 **Deliverables**:
 - ✅ Complete documentation site
+- ✅ Backup/restore procedures
+- ✅ Disaster recovery guide
 - ✅ Tutorial videos
 - ✅ Blog posts
 
@@ -1689,18 +1707,23 @@ Documentation:
 ### Phase 6: Testing & Release (Weeks 11-12)
 **Agent: Testing & QA Engineer**
 1. Full regression testing
-2. Load testing
-3. Security audit
-4. Beta user testing
-5. Bug triage and fixes
+2. Performance benchmarks and profiling
+3. Load testing with documented results
+4. Security audit
+5. Beta user testing
+6. Bug triage and fixes
 
 **Agent: DevOps & Integration Engineer**
 1. Production deployment setup
-2. Monitoring and alerting
-3. Backup and disaster recovery
-4. Release v1.0
+2. Monitoring and alerting configuration
+3. Backup and disaster recovery setup
+4. Performance tuning based on benchmarks
+5. Release v1.0
 
 **Deliverables**:
+- ✅ Performance benchmarks and results
+- ✅ Load testing reports
+- ✅ Security audit report
 - ✅ v1.0 release of all components
 - ✅ Production deployment
 - ✅ Monitoring dashboards
@@ -1908,6 +1931,78 @@ Documentation:
 2. **Resource Availability**: AI agents or developers unavailable
    - Mitigation: Clear documentation for handoffs
    - Mitigation: Modular design for parallel work
+
+---
+
+## Core Features Checklist
+
+This section outlines essential features that must be present in the v1.0 release:
+
+### Data Management
+- ✅ CRUD operations for databases, tables, and records
+- ✅ JSON and YAML file storage formats
+- ✅ Schema definition and validation (JSON Schema)
+- ✅ Referential integrity checks (basic)
+- ⚠️ Schema versioning and evolution (should be included in Phase 2)
+- ⚠️ Data validation rules engine (beyond JSON schema - should be in Phase 2)
+- ⚠️ Conflict resolution strategies for Git merges (should be in Phase 2)
+
+### Version Control
+- ✅ Git-based versioning
+- ✅ Branch operations (create, switch, merge)
+- ✅ Commit history and diffs
+- ⚠️ Conflict detection and resolution UI/API (should be in Phase 2)
+- ⚠️ Cherry-pick operations (can be future enhancement)
+
+### API & Interfaces
+- ✅ RESTful API with OpenAPI specification
+- ✅ TypeScript client library
+- ✅ Go CLI with full functionality
+- ✅ `serve` command for HTTP server
+- ⚠️ CLI autocomplete support (nice to have for Phase 2-3)
+
+### Security & Access Control
+- ✅ Authentication (JWT, API keys)
+- ✅ Authorization and RBAC
+- ✅ Access policies (database, table, record level)
+- ⚠️ Audit logging for all operations (should be in Phase 7)
+- ⚠️ Encryption support (can be v2.0+)
+
+### Integration & Automation
+- ✅ GitHub Actions integration
+- ✅ Triggers system (webhooks, CLI commands)
+- ✅ DB migration scripts generator
+- ✅ DALgo client adapter
+- ✅ Datatug integration
+
+### Operations & Monitoring
+- ⚠️ Prometheus metrics endpoint (should be in Phase 2)
+- ⚠️ Structured logging (should be in Phase 2)
+- ⚠️ Health check endpoints (should be in Phase 2)
+- ⚠️ Performance profiling tools (can be Phase 6)
+- ⚠️ Backup and restore procedures (documentation in Phase 5)
+
+### Developer Experience
+- ✅ Comprehensive documentation
+- ✅ OpenAPI specification
+- ✅ Code examples and tutorials
+- ⚠️ Configuration management (.ingitdb.yaml) (should be in Phase 2)
+- ⚠️ Development mock server (can be Phase 3)
+- ⚠️ Test data generators (can be Phase 4)
+
+### Testing & Quality
+- ✅ Unit tests (80%+ coverage)
+- ✅ Integration tests
+- ✅ Contract tests (client-server)
+- ✅ End-to-end tests
+- ✅ Security testing
+- ⚠️ Performance benchmarks (should be in Phase 6)
+- ⚠️ Load testing results (should be in Phase 6)
+
+### Notes:
+- ✅ = Explicitly covered in current plan
+- ⚠️ = Should be added or clarified in the plan
+- Features marked "should be" need to be explicitly called out in the relevant phases
 
 ---
 
