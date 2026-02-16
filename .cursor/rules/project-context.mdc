@@ -1,0 +1,37 @@
+---
+description: Core project context for the inGitDB planning repository
+alwaysApply: true
+---
+
+# inGitDB Project Context
+
+Read [AGENTS.md](../../AGENTS.md) for the complete AI agent guidelines.
+
+## What This Repo Is
+
+This is a **planning and architecture** repository for the inGitDB ecosystem — an open-source versioned database storing data in text files with Git-based version control.
+
+It contains **documentation only**: Markdown files, an OpenAPI spec (YAML), and agent configs. No application source code.
+
+## Key Documents
+
+- `AGENTS.md` — Central AI agent guidelines (single source of truth)
+- `development-plan.md` — Agent roles, prompts, 6-phase plan, tech stack, risks
+- `openapi-spec.yaml` — Complete REST API specification (OpenAPI 3.0)
+- `ingitdb-ts-architecture.md` — TypeScript client architecture
+- `github-actions-integration.md` — CI/CD workflows and custom actions
+
+## Constraints
+
+- Do NOT create application source code (`.ts`, `.go`, `.js`) in this repo
+- Do NOT modify `openapi-spec.yaml` unless explicitly instructed
+- Reference existing docs rather than duplicating content
+- Use relative links between documents
+- Update `SUMMARY.md` when adding deliverables
+
+## Tech Stack (for implementation repos)
+
+- Server: Node.js/TypeScript or Go, JWT auth
+- Client: TypeScript 5+, Rollup/tsup, Jest
+- CLI: Go 1.21+, go-git
+- CI/CD: GitHub Actions, Docker

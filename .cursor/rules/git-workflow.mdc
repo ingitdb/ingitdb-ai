@@ -1,0 +1,36 @@
+---
+description: Git workflow, commit, and PR conventions
+alwaysApply: true
+---
+
+# Git Workflow Conventions
+
+## Branching
+
+- `main` — stable, always deployable
+- `develop` — integration branch for next release
+- `feature/<name>` — new features
+- `fix/<name>` — bug fixes
+- `docs/<name>` — documentation changes
+- `chore/<name>` — maintenance tasks
+
+## Conventional Commits
+
+Format: `<type>(<scope>): <description>`
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`
+
+Scope examples: `api`, `server`, `client`, `actions`, `docs`
+
+Examples:
+- `feat(api): add pagination to record listing`
+- `docs(plan): update Phase 2 timeline`
+- `fix(spec): correct merge endpoint response schema`
+
+## PR Requirements
+
+- Descriptive title following Conventional Commits format
+- Summary of changes with context
+- Link to related issue(s) when applicable
+- Test plan or evidence of testing
+- Breaking changes clearly noted

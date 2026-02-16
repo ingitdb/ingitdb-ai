@@ -1,0 +1,28 @@
+---
+description: Markdown authoring conventions for documentation
+globs: "**/*.md"
+---
+
+# Markdown Conventions
+
+## Formatting
+
+- Use ATX-style headers (`#`, `##`, etc.) — never underline style
+- One sentence per line for clean Git diffs
+- Use reference links at the bottom when a document has many links
+- Maximum line length: 120 characters (soft limit)
+- Files end with a single newline, no trailing whitespace
+
+## Structure
+
+- Use tables for structured comparisons and data
+- Use Mermaid diagrams for architecture and flow visualization
+- Use code blocks with language identifiers (e.g., ` ```typescript `)
+- Use relative links between documents in this repo
+
+## Content Rules
+
+- Reference existing docs instead of duplicating content
+- Preserve existing document structure — add sections, don't reorganize
+- Keep Mermaid diagrams up to date when architecture changes
+- Update `SUMMARY.md` when adding new deliverables

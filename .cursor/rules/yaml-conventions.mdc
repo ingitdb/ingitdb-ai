@@ -1,0 +1,27 @@
+---
+description: YAML and OpenAPI conventions
+globs: "**/*.yaml"
+---
+
+# YAML & OpenAPI Conventions
+
+## General YAML
+
+- 2-space indentation
+- UTF-8 encoding, LF line endings
+- No trailing whitespace
+- Files end with a single newline
+
+## OpenAPI Specific
+
+- Use `$ref` for reusable schemas — avoid inline duplication
+- Keep endpoint paths RESTful and consistent
+- Add comments for non-obvious design decisions
+- Include examples for request/response bodies
+- Define comprehensive error responses with status codes
+
+## Important
+
+- `openapi-spec.yaml` is a versioned API contract
+- Do NOT modify it unless explicitly instructed
+- Any changes must maintain backward compatibility unless a breaking change is approved
