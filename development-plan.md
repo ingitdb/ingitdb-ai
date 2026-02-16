@@ -6,16 +6,16 @@ This document outlines the skills, agents, prompts, and execution plans required
 
 ## Project Components
 
-### 1. Server with OpenAPI Definition
-**Repository**: `ingitdb/ingitdb-server`
+### 1. Go CLI with Server (Existing)
+**Repository**: `ingitdb/ingitdb-go`
+- Core CLI functionality for validation and data management
+- Built-in `serve` command to run HTTP server with OpenAPI-defined REST API
+- Can be used standalone or as a server
 
 ### 2. TypeScript Client
 **Repository**: `ingitdb/ingitdb-ts`
 
-### 3. Go CLI (Existing)
-**Repository**: `ingitdb/ingitdb-go`
-
-### 4. GitHub Actions Validator
+### 3. GitHub Actions Validator
 **Integration**: GitHub Actions workflow using ingitdb-go CLI
 
 ---
@@ -226,6 +226,73 @@ This document outlines the skills, agents, prompts, and execution plans required
 - User guides
 - Architecture documentation
 - Contributing guidelines
+
+---
+
+### Agent 7: Integration Engineer
+**Primary Role**: Develop integrations and extended features
+
+**Skills Required**:
+- Go programming
+- Integration patterns
+- Database drivers
+- Webhook implementation
+- Security and access control
+
+**Responsibilities**:
+1. Implement DB migration scripts generator
+2. Develop triggers system (webhooks and CLI commands)
+3. Implement access management and RBAC
+4. Create DALgo adapter (dalgo2ingitdb)
+5. Develop Datatug integration plugin
+6. Write comprehensive integration tests
+7. Document integration patterns
+
+**Deliverables**:
+- DB migration scripts generator
+- Triggers system implementation
+- Access management system
+- dalgo2ingitdb package
+- Datatug integration plugin
+- Integration test suite
+- Integration documentation
+
+---
+
+### 4. DB Migration Scripts Generator
+**Component**: Part of ingitdb-go CLI
+- Compares inGitDB as source against target databases
+- Generates migration scripts for SQL databases (PostgreSQL, MySQL, SQLite)
+- Supports key-value stores (Redis, etcd)
+- Handles schema differences and data synchronization
+
+### 5. inGitDB Triggers
+**Component**: Part of ingitdb-go CLI and server
+- Execute CLI commands or call webhooks on create/update/delete operations
+- Support for pre- and post-operation hooks
+- Configurable trigger definitions
+- Integration with external systems
+
+### 6. Access Management Policy
+**Component**: Part of ingitdb-go server
+- Role-based access control (RBAC)
+- Fine-grained permissions at database, table, and record levels
+- Policy definition using declarative configuration
+- Integration with identity providers
+
+### 7. DALgo Client Integration
+**Repository**: To be created - `ingitdb/dalgo2ingitdb`
+- Adapter implementation for [dal-go](https://github.com/dal-go) framework
+- Provides standard DAL interface for inGitDB
+- Enables use of inGitDB with existing dal-go applications
+- Type-safe database operations
+
+### 8. Datatug Integration
+**Component**: Metadata provider for [datatug](https://github.com/datatug)
+- Provides inGitDB metadata to Datatug
+- Enables viewing and exploring inGitDB data in Web UI
+- CLI viewer integration
+- Query builder and data browser support
 
 ---
 
@@ -576,6 +643,944 @@ Tools:
 
 ---
 
+### Prompt 6: DB Migration Scripts Generator
+```
+Implement a DB migration scripts generator in ingitdb-go CLI with these requirements:
+
+Purpose:
+- Compare inGitDB data (source) against target database systems
+- Generate migration scripts to synchronize data
+- Support multiple target database types
+- Handle schema and data differences
+
+Supported Target Databases:
+1. SQL Databases:
+   - PostgreSQL
+   - MySQL
+   - SQLite
+   - SQL Server
+
+2. Key-Value Stores:
+   - Redis
+   - etcd
+   - Consul KV
+
+Core Features:
+1. Schema Analysis:
+   - Read inGitDB table schemas
+   - Compare with target database schema
+   - Detect additions, modifications, deletions
+   - Generate CREATE TABLE, ALTER TABLE statements
+
+2. Data Synchronization:
+   - Compare record sets between inGitDB and target
+   - Generate INSERT, UPDATE, DELETE statements
+   - Handle bulk operations efficiently
+   - Support incremental sync
+
+3. Migration Script Generation:
+   - Generate idempotent migration scripts
+   - Include rollback scripts
+   - Add transaction boundaries
+   - Include verification queries
+
+4. Configuration:
+   - Target database connection settings
+   - Mapping rules (table names, column types)
+   - Transformation functions
+   - Migration strategy (full, incremental)
+
+CLI Commands:
+```bash
+# Analyze differences
+ingitdb-go migrate analyze \
+  --source ./data/mydb \
+  --target postgres://localhost/mydb \
+  --output diff-report.json
+
+# Generate migration script
+ingitdb-go migrate generate \
+  --source ./data/mydb \
+  --target postgres://localhost/mydb \
+  --output migrate-up.sql \
+  --rollback migrate-down.sql
+
+# Apply migration
+ingitdb-go migrate apply \
+  --source ./data/mydb \
+  --target postgres://localhost/mydb \
+  --script migrate-up.sql \
+  --verify
+
+# Sync data (incremental)
+ingitdb-go migrate sync \
+  --source ./data/mydb \
+  --target redis://localhost:6379 \
+  --mode incremental \
+  --batch-size 1000
+```
+
+Implementation Requirements:
+- Support for custom type mappings
+- Conflict resolution strategies
+- Progress reporting for large datasets
+- Dry-run mode
+- Detailed logging
+- Error handling and recovery
+- Connection pooling for target databases
+
+Testing:
+- Unit tests for each database type
+- Integration tests with real databases
+- Test schema evolution scenarios
+- Test large dataset migrations
+- Test error scenarios and rollback
+```
+
+---
+
+### Prompt 7: inGitDB Triggers System
+```
+Implement a triggers system for inGitDB with these requirements:
+
+Overview:
+- Execute actions on create, update, delete operations
+- Support CLI commands and webhook calls
+- Configure triggers declaratively
+- Provide pre- and post-operation hooks
+
+Trigger Types:
+1. CLI Command Triggers:
+   - Execute shell commands
+   - Pass operation context as arguments
+   - Capture output and exit codes
+   - Support async execution
+
+2. Webhook Triggers:
+   - HTTP POST to configured URLs
+   - Send operation payload as JSON
+   - Handle authentication (API keys, JWT)
+   - Retry with exponential backoff
+
+3. Script Triggers:
+   - Execute custom scripts (bash, python, node)
+   - Provide operation context
+   - Sandbox execution environment
+   - Resource limits
+
+Trigger Configuration (.ingitdb-triggers.yaml):
+```yaml
+triggers:
+  # Before record insert
+  - name: validate-user-email
+    event: before_insert
+    table: users
+    type: cli
+    command: ./scripts/validate-email.sh
+    args:
+      - "${record.email}"
+    failOnError: true
+    
+  # After record update
+  - name: notify-user-update
+    event: after_update
+    table: users
+    type: webhook
+    url: https://api.example.com/webhooks/user-updated
+    method: POST
+    headers:
+      Authorization: "Bearer ${env.API_TOKEN}"
+    payload:
+      userId: "${record.id}"
+      changes: "${changes}"
+      timestamp: "${timestamp}"
+    retries: 3
+    
+  # Before delete
+  - name: archive-before-delete
+    event: before_delete
+    table: orders
+    type: script
+    script: ./scripts/archive-order.py
+    interpreter: python3
+    timeout: 30s
+    
+  # After commit
+  - name: sync-to-cache
+    event: after_commit
+    database: mydb
+    type: webhook
+    url: https://cache.example.com/invalidate
+    async: true
+```
+
+CLI Integration:
+```bash
+# List configured triggers
+ingitdb-go triggers list
+
+# Test a trigger
+ingitdb-go triggers test validate-user-email \
+  --data '{"email":"test@example.com"}'
+
+# Enable/disable triggers
+ingitdb-go triggers enable validate-user-email
+ingitdb-go triggers disable notify-user-update
+
+# View trigger execution history
+ingitdb-go triggers history --table users --limit 50
+```
+
+Server API Endpoints:
+- GET /databases/{db}/triggers - List triggers
+- POST /databases/{db}/triggers - Create trigger
+- PUT /databases/{db}/triggers/{id} - Update trigger
+- DELETE /databases/{db}/triggers/{id} - Delete trigger
+- POST /databases/{db}/triggers/{id}/test - Test trigger
+- GET /databases/{db}/triggers/{id}/history - Execution history
+
+Events:
+- before_insert, after_insert
+- before_update, after_update
+- before_delete, after_delete
+- before_commit, after_commit
+- before_merge, after_merge
+- before_branch, after_branch
+
+Operation Context:
+- record: Current record data
+- changes: Modified fields (for updates)
+- oldRecord: Previous record data (for updates/deletes)
+- operation: Operation type
+- table: Table name
+- database: Database name
+- branch: Current branch
+- user: User performing operation
+- timestamp: Operation timestamp
+
+Implementation Requirements:
+- Trigger execution engine
+- Context variable substitution
+- Error handling (fail-fast vs. continue)
+- Execution logs and audit trail
+- Performance monitoring
+- Rate limiting for webhooks
+- Security sandboxing for scripts
+- Circular dependency detection
+
+Testing:
+- Unit tests for each trigger type
+- Integration tests with real webhooks
+- Test error scenarios
+- Test retry logic
+- Performance tests
+- Security tests (script isolation)
+```
+
+---
+
+### Prompt 8: Access Management Policy
+```
+Implement a comprehensive access management system for inGitDB with these requirements:
+
+Overview:
+- Role-based access control (RBAC)
+- Fine-grained permissions
+- Policy-based authorization
+- Integration with identity providers
+
+Permission Levels:
+1. Database Level:
+   - read: Read database metadata and tables
+   - write: Create/update/delete tables
+   - admin: Full control including triggers and policies
+
+2. Table Level:
+   - read: Read table schema and records
+   - insert: Insert new records
+   - update: Update existing records
+   - delete: Delete records
+   - schema_update: Modify table schema
+
+3. Record Level:
+   - read: Read specific records
+   - update: Update specific records
+   - delete: Delete specific records
+
+4. Branch Level:
+   - read: Read branch
+   - write: Push to branch
+   - merge: Merge branches
+   - create: Create new branches
+
+Role Definitions (.ingitdb-policy.yaml):
+```yaml
+roles:
+  # Predefined roles
+  admin:
+    description: Full administrative access
+    permissions:
+      - database:*:admin
+      - table:*:*
+      - branch:*:*
+  
+  developer:
+    description: Read and write data, create branches
+    permissions:
+      - database:*:read
+      - database:*:write
+      - table:*:read
+      - table:*:insert
+      - table:*:update
+      - branch:*:read
+      - branch:*:write
+      - branch:*:create
+  
+  viewer:
+    description: Read-only access
+    permissions:
+      - database:*:read
+      - table:*:read
+      - branch:main:read
+  
+  # Custom roles
+  data_analyst:
+    description: Read data, cannot modify schemas
+    permissions:
+      - database:analytics:read
+      - table:analytics/*:read
+      - table:analytics/*:insert
+      - table:analytics/*:update
+    restrictions:
+      - "!table:analytics/*:schema_update"
+      - "!table:analytics/*:delete"
+
+# User-role assignments
+users:
+  alice@example.com:
+    roles: [admin]
+    
+  bob@example.com:
+    roles: [developer]
+    databases: [myapp, staging]
+    
+  charlie@example.com:
+    roles: [data_analyst]
+    
+  team-api@example.com:
+    roles: [viewer]
+    api_key: true
+
+# Policies
+policies:
+  # Deny delete on production branch
+  - name: protect-production
+    effect: deny
+    actions: [delete]
+    resources:
+      - branch:production
+      - table:*/production/*
+    
+  # Allow only specific users to merge to main
+  - name: main-branch-protection
+    effect: allow
+    actions: [merge]
+    resources:
+      - branch:main
+    principals:
+      - alice@example.com
+      - bob@example.com
+    
+  # Record-level policy
+  - name: user-own-records
+    effect: allow
+    actions: [update, delete]
+    resources:
+      - table:users/records/*
+    conditions:
+      - "record.owner == user.email"
+```
+
+Authentication Methods:
+1. API Keys:
+   - Generate and manage API keys
+   - Key rotation policies
+   - Scope-limited keys
+
+2. JWT Tokens:
+   - Support standard JWT claims
+   - Custom claims for permissions
+   - Token validation and refresh
+
+3. OAuth 2.0 / OIDC:
+   - Integration with identity providers
+   - Support for GitHub, Google, Azure AD
+   - SSO capabilities
+
+4. Basic Auth:
+   - Username/password (for CLI)
+   - Secure password storage
+
+CLI Commands:
+```bash
+# Role management
+ingitdb-go policy roles list
+ingitdb-go policy roles create --name analyst --from-file role.yaml
+ingitdb-go policy roles assign --user alice@example.com --role admin
+
+# User management
+ingitdb-go policy users list
+ingitdb-go policy users create --email bob@example.com --role developer
+ingitdb-go policy users revoke --email charlie@example.com --role admin
+
+# API key management
+ingitdb-go policy apikeys create --user bob@example.com --scope "database:myapp:read"
+ingitdb-go policy apikeys list --user bob@example.com
+ingitdb-go policy apikeys revoke --key-id abc123
+
+# Policy testing
+ingitdb-go policy check \
+  --user bob@example.com \
+  --action update \
+  --resource table:myapp/users/record/123
+```
+
+Server API Endpoints:
+- POST /auth/login - Authenticate user
+- POST /auth/token/refresh - Refresh token
+- GET /auth/user - Get current user info
+- GET /policies/roles - List roles
+- POST /policies/roles - Create role
+- GET /policies/users - List users
+- POST /policies/users - Create user
+- PUT /policies/users/{id}/roles - Assign roles
+- GET /policies/check - Check permissions
+
+Implementation Requirements:
+- Policy evaluation engine
+- Permission caching for performance
+- Audit logging of access attempts
+- Integration with identity providers
+- Secure token storage
+- Password hashing (bcrypt/argon2)
+- Rate limiting per user/key
+- Session management
+
+Security Features:
+- Password complexity requirements
+- Account lockout after failed attempts
+- Two-factor authentication (optional)
+- IP whitelisting (optional)
+- Audit trail for all access
+- Secure credential storage
+
+Testing:
+- Unit tests for policy evaluation
+- Integration tests with auth providers
+- Test permission inheritance
+- Test policy conflicts
+- Security testing (bypass attempts)
+- Performance tests (policy evaluation)
+```
+
+---
+
+### Prompt 9: DALgo Client Integration
+```
+Create a dal-go adapter for inGitDB with these requirements:
+
+Overview:
+- Implement dal-go interface for inGitDB
+- Enable use of inGitDB with existing dal-go applications
+- Provide type-safe database operations
+- Support inGitDB-specific features
+
+Repository: ingitdb/dalgo2ingitdb
+
+dal-go Interface Implementation:
+```go
+package dalgo2ingitdb
+
+import (
+    "context"
+    "github.com/dal-go/dalgo/dal"
+    "github.com/ingitdb/ingitdb-go/client"
+)
+
+// Adapter implements dal.Database interface
+type Adapter struct {
+    client *client.InGitDBClient
+    dbName string
+}
+
+// NewAdapter creates a new dal-go adapter for inGitDB
+func NewAdapter(baseURL, dbName string, options ...Option) (*Adapter, error) {
+    // Implementation
+}
+
+// Connection implements dal.Database.Connection
+func (a *Adapter) Connection() dal.Connection {
+    return &connection{adapter: a}
+}
+
+// Collection implements dal.Database.Collection
+func (a *Adapter) Collection(name string) dal.Collection {
+    return &collection{
+        adapter: a,
+        table:   name,
+    }
+}
+
+// RunInTransaction implements dal.Database.RunInTransaction
+func (a *Adapter) RunInTransaction(ctx context.Context, f func(context.Context) error, opts *dal.TransactionOptions) error {
+    // Use inGitDB branch/commit mechanism for transactions
+}
+```
+
+Key Features:
+1. CRUD Operations:
+   - Get, Set, Update, Delete
+   - Batch operations
+   - Query with filtering
+   - Pagination support
+
+2. Transaction Support:
+   - Map to inGitDB branches
+   - Atomic commits
+   - Rollback capability
+
+3. Type Safety:
+   - Generic type support
+   - Schema validation
+   - Type conversion
+
+4. InGitDB-Specific:
+   - Branch operations
+   - Version history access
+   - Merge operations
+   - Conflict resolution
+
+Usage Example:
+```go
+package main
+
+import (
+    "context"
+    "github.com/dal-go/dalgo/dal"
+    "github.com/ingitdb/dalgo2ingitdb"
+)
+
+type User struct {
+    ID    string `json:"id" dalgo:"id"`
+    Name  string `json:"name"`
+    Email string `json:"email"`
+}
+
+func main() {
+    // Create adapter
+    adapter, err := dalgo2ingitdb.NewAdapter(
+        "http://localhost:3000",
+        "mydb",
+        dalgo2ingitdb.WithAPIKey("your-api-key"),
+    )
+    if err != nil {
+        panic(err)
+    }
+
+    // Get collection
+    users := adapter.Collection("users")
+    
+    ctx := context.Background()
+    
+    // Insert record
+    user := &User{
+        ID:    "user1",
+        Name:  "Alice",
+        Email: "alice@example.com",
+    }
+    
+    err = users.Set(ctx, dal.NewKeyWithID("user1"), user)
+    if err != nil {
+        panic(err)
+    }
+    
+    // Get record
+    var retrieved User
+    err = users.Get(ctx, dal.NewKeyWithID("user1"), &retrieved)
+    if err != nil {
+        panic(err)
+    }
+    
+    // Query records
+    query := users.Query().
+        Where("name", dal.Equal, "Alice").
+        Limit(10)
+    
+    iterator := query.Run(ctx)
+    defer iterator.Close()
+    
+    for iterator.Next() {
+        var u User
+        err := iterator.Decode(&u)
+        if err != nil {
+            panic(err)
+        }
+        println(u.Name)
+    }
+    
+    // Transaction example
+    err = adapter.RunInTransaction(ctx, func(ctx context.Context) error {
+        // All operations in this function are atomic
+        err := users.Set(ctx, dal.NewKeyWithID("user2"), &User{
+            ID: "user2", Name: "Bob",
+        })
+        if err != nil {
+            return err
+        }
+        
+        return users.Delete(ctx, dal.NewKeyWithID("user1"))
+    }, nil)
+}
+```
+
+Advanced Features:
+```go
+// Access inGitDB-specific features
+type ExtendedAdapter interface {
+    dal.Database
+    
+    // Branch operations
+    CreateBranch(ctx context.Context, name, from string) error
+    SwitchBranch(ctx context.Context, name string) error
+    MergeBranch(ctx context.Context, source, target string) error
+    
+    // Version history
+    GetHistory(ctx context.Context, table, recordID string) ([]Version, error)
+    GetCommits(ctx context.Context, limit int) ([]Commit, error)
+    
+    // Diff operations
+    DiffBranches(ctx context.Context, base, compare string) (*Diff, error)
+}
+
+// Use extended features
+if extended, ok := adapter.(ExtendedAdapter); ok {
+    err := extended.CreateBranch(ctx, "feature", "main")
+    
+    history, err := extended.GetHistory(ctx, "users", "user1")
+}
+```
+
+Configuration Options:
+```go
+type Options struct {
+    BaseURL     string
+    APIKey      string
+    Branch      string
+    Timeout     time.Duration
+    RetryPolicy *RetryPolicy
+    Logger      Logger
+}
+
+// Option functions
+func WithAPIKey(key string) Option
+func WithBranch(branch string) Option
+func WithTimeout(timeout time.Duration) Option
+func WithRetryPolicy(policy *RetryPolicy) Option
+func WithLogger(logger Logger) Option
+```
+
+Implementation Requirements:
+- Full dal.Database interface implementation
+- Efficient query translation
+- Connection pooling
+- Error mapping
+- Comprehensive logging
+- Performance optimization
+- Type-safe operations
+
+Testing:
+- Unit tests for all dal.Database methods
+- Integration tests with real inGitDB server
+- Compliance tests (dal-go test suite)
+- Performance benchmarks
+- Concurrent access tests
+
+Documentation:
+- API reference
+- Usage examples
+- Migration guide from other dal-go adapters
+- Best practices
+```
+
+---
+
+### Prompt 10: Datatug Integration
+```
+Implement inGitDB metadata provider for Datatug with these requirements:
+
+Overview:
+- Provide inGitDB metadata to Datatug
+- Enable viewing and exploring inGitDB data in Web UI
+- Support CLI viewer integration
+- Provide query builder capabilities
+
+Repository: Can be part of ingitdb-go or separate plugin
+
+Datatug Integration Points:
+1. Metadata Provider:
+   - Database structure (tables, columns)
+   - Schema definitions
+   - Relationships and constraints
+   - Statistics and indexes
+
+2. Data Access:
+   - Query execution
+   - Result set formatting
+   - Pagination support
+   - Export capabilities
+
+3. Version Control Integration:
+   - Show branch information
+   - Display commit history
+   - View historical data
+   - Compare versions
+
+Metadata Provider Implementation:
+```go
+package ingitdb_datatug
+
+import (
+    "context"
+    "github.com/datatug/datatug/pkg/models"
+)
+
+// Provider implements datatug metadata provider interface
+type Provider struct {
+    ingitdbURL string
+    database   string
+}
+
+// NewProvider creates an inGitDB provider for Datatug
+func NewProvider(url, database string) *Provider {
+    return &Provider{
+        ingitdbURL: url,
+        database:   database,
+    }
+}
+
+// GetDatabaseInfo returns database metadata
+func (p *Provider) GetDatabaseInfo(ctx context.Context) (*models.Database, error) {
+    // Return database structure
+}
+
+// GetTables returns list of tables
+func (p *Provider) GetTables(ctx context.Context) ([]*models.Table, error) {
+    // Return table list with schemas
+}
+
+// GetTableInfo returns detailed table information
+func (p *Provider) GetTableInfo(ctx context.Context, tableName string) (*models.Table, error) {
+    // Return table schema, columns, constraints
+}
+
+// ExecuteQuery executes a query and returns results
+func (p *Provider) ExecuteQuery(ctx context.Context, query string) (*models.QueryResult, error) {
+    // Translate query and execute
+}
+
+// GetRecordCount returns count of records in table
+func (p *Provider) GetRecordCount(ctx context.Context, tableName string) (int64, error) {
+    // Return record count
+}
+```
+
+Configuration (datatug.yaml):
+```yaml
+projects:
+  - id: my-ingitdb
+    title: My InGitDB Project
+    
+    environments:
+      - id: production
+        title: Production
+        
+        stores:
+          - id: ingitdb-prod
+            title: InGitDB Production
+            driver: ingitdb
+            parameters:
+              url: http://ingitdb.example.com
+              database: production
+              branch: main
+              api_key: ${INGITDB_API_KEY}
+      
+      - id: development
+        title: Development
+        
+        stores:
+          - id: ingitdb-dev
+            title: InGitDB Development
+            driver: ingitdb
+            parameters:
+              url: http://localhost:3000
+              database: mydb
+              branch: develop
+
+# InGitDB-specific configuration
+ingitdb:
+  # Show version control information
+  show_branches: true
+  show_commits: true
+  
+  # Enable time-travel queries
+  enable_historical_queries: true
+  
+  # Query builder settings
+  query_builder:
+    enable: true
+    max_results: 1000
+```
+
+Datatug Web UI Features:
+1. Database Explorer:
+   - Tree view of databases and tables
+   - Schema visualization
+   - Relationship diagrams
+   - Search capabilities
+
+2. Data Browser:
+   - Table data viewer with pagination
+   - Column filtering and sorting
+   - Record editing (if permissions allow)
+   - Export to CSV/JSON/Excel
+
+3. Query Builder:
+   - Visual query builder
+   - Support for filters and joins
+   - Query history
+   - Save and share queries
+
+4. Version Control Integration:
+   - Branch selector
+   - Commit timeline
+   - Diff viewer for data changes
+   - Time-travel queries (view data at specific commit)
+
+5. Schema Management:
+   - View and edit schemas
+   - Generate schema documentation
+   - Track schema changes
+   - Validate schema consistency
+
+CLI Integration:
+```bash
+# Install datatug with inGitDB support
+datatug install-driver ingitdb
+
+# Configure inGitDB connection
+datatug project add \
+  --id my-project \
+  --store ingitdb \
+  --url http://localhost:3000 \
+  --database mydb
+
+# Explore database structure
+datatug explore my-project --store ingitdb
+
+# Browse table data
+datatug browse my-project.users --limit 50
+
+# Execute query
+datatug query my-project "SELECT * FROM users WHERE active = true"
+
+# View schema
+datatug schema my-project.users
+
+# Show version history
+datatug history my-project.users --record-id user1
+
+# Compare branches
+datatug diff my-project --base main --compare feature
+```
+
+InGitDB-Specific Features in Datatug:
+```typescript
+// Custom UI components for inGitDB
+
+// Branch selector
+<BranchSelector 
+  branches={branches}
+  current={currentBranch}
+  onSwitch={handleBranchSwitch}
+/>
+
+// Commit timeline
+<CommitTimeline
+  commits={commits}
+  onSelectCommit={handleSelectCommit}
+/>
+
+// Time-travel query
+<TimeTravelQuery
+  table="users"
+  commit={selectedCommit}
+  query={query}
+/>
+
+// Diff viewer
+<DiffViewer
+  baseBranch="main"
+  compareBranch="feature"
+  table="users"
+  recordId="user1"
+/>
+
+// Merge conflict resolver
+<MergeConflictResolver
+  conflicts={conflicts}
+  onResolve={handleResolve}
+/>
+```
+
+API Endpoints (if extending Datatug API):
+```
+GET /api/ingitdb/databases - List databases
+GET /api/ingitdb/databases/{db} - Get database info
+GET /api/ingitdb/databases/{db}/branches - List branches
+GET /api/ingitdb/databases/{db}/commits - List commits
+GET /api/ingitdb/databases/{db}/tables - List tables
+GET /api/ingitdb/databases/{db}/tables/{table} - Get table schema
+GET /api/ingitdb/databases/{db}/tables/{table}/data - Browse data
+POST /api/ingitdb/databases/{db}/query - Execute query
+GET /api/ingitdb/databases/{db}/diff - Compare branches
+```
+
+Implementation Requirements:
+- Implement Datatug provider interface
+- Support for inGitDB-specific features
+- Efficient data fetching
+- Caching for metadata
+- WebSocket support for real-time updates
+- Export functionality
+- Security (respect inGitDB permissions)
+
+Testing:
+- Unit tests for provider implementation
+- Integration tests with Datatug
+- UI tests for custom components
+- Performance tests with large datasets
+- Security tests (permission enforcement)
+
+Documentation:
+- Installation guide
+- Configuration examples
+- Usage tutorials
+- Screenshots and videos
+- Troubleshooting guide
+```
+
+---
+
 ## Execution Plan
 
 ### Phase 1: Foundation (Weeks 1-2)
@@ -595,16 +1600,20 @@ Tools:
 
 ### Phase 2: Server Implementation (Weeks 3-6)
 **Agent: Server Backend Developer**
-1. Set up project structure
+1. Set up project structure (ingitdb-go with `serve` command)
 2. Generate server boilerplate from OpenAPI spec
 3. Implement database operations
-4. Implement table operations
+4. Implement table operations with schema versioning
 5. Implement record CRUD operations
-6. Implement version control features
+6. Implement version control features with conflict resolution
 7. Add authentication and authorization
 8. Add validation and error handling
-9. Write comprehensive tests
-10. Create Docker configuration
+9. Implement configuration management (.ingitdb.yaml)
+10. Add Prometheus metrics endpoint
+11. Add structured logging
+12. Add health check endpoints
+13. Write comprehensive tests
+14. Create Docker configuration
 
 **Parallel Task - Agent: Testing & QA Engineer**
 1. Set up testing infrastructure
@@ -613,7 +1622,11 @@ Tools:
 4. Set up integration test environment
 
 **Deliverables**:
-- ✅ Working server implementation
+- ✅ Working server implementation (as `serve` command)
+- ✅ Schema versioning system
+- ✅ Conflict resolution for merges
+- ✅ Configuration management
+- ✅ Metrics and logging
 - ✅ Test suite (80%+ coverage)
 - ✅ Docker image
 - ✅ Deployment guide
@@ -628,6 +1641,11 @@ Tools:
 4. Add error handling and retry logic
 5. Write documentation and examples
 6. Publish to NPM as beta
+
+**Parallel Task - Agent: Server Backend Developer**
+1. Add CLI autocomplete support (bash, zsh, fish)
+2. Implement interactive CLI mode (optional)
+3. Enhance CLI documentation
 
 **Parallel Task - Agent: Testing & QA Engineer**
 1. Create client test suite
@@ -666,7 +1684,10 @@ Tools:
 3. Write API reference
 4. Create architecture documentation
 5. Write migration guides
-6. Create video tutorials
+6. Write backup and restore procedures
+7. Write disaster recovery guide
+8. Create troubleshooting guide
+9. Create video tutorials
 
 **Parallel Task - All Agents**
 1. Code review and refactoring
@@ -676,6 +1697,8 @@ Tools:
 
 **Deliverables**:
 - ✅ Complete documentation site
+- ✅ Backup/restore procedures
+- ✅ Disaster recovery guide
 - ✅ Tutorial videos
 - ✅ Blog posts
 
@@ -684,21 +1707,70 @@ Tools:
 ### Phase 6: Testing & Release (Weeks 11-12)
 **Agent: Testing & QA Engineer**
 1. Full regression testing
-2. Load testing
-3. Security audit
-4. Beta user testing
-5. Bug triage and fixes
+2. Performance benchmarks and profiling
+3. Load testing with documented results
+4. Security audit
+5. Beta user testing
+6. Bug triage and fixes
 
 **Agent: DevOps & Integration Engineer**
 1. Production deployment setup
-2. Monitoring and alerting
-3. Backup and disaster recovery
-4. Release v1.0
+2. Monitoring and alerting configuration
+3. Backup and disaster recovery setup
+4. Performance tuning based on benchmarks
+5. Release v1.0
 
 **Deliverables**:
+- ✅ Performance benchmarks and results
+- ✅ Load testing reports
+- ✅ Security audit report
 - ✅ v1.0 release of all components
 - ✅ Production deployment
 - ✅ Monitoring dashboards
+
+---
+
+### Phase 7: Extended Features & Integrations (Weeks 13-16)
+**Agent: Server Backend Developer & Integration Engineer**
+1. Implement `serve` command in ingitdb-go CLI
+2. Implement DB migration scripts generator
+3. Implement triggers system (CLI commands and webhooks)
+4. Implement access management policy and RBAC
+
+**Agent: DALgo Integration Developer**
+1. Create dalgo2ingitdb adapter repository
+2. Implement dal.Database interface
+3. Add inGitDB-specific extensions
+4. Write comprehensive tests
+5. Publish package
+
+**Agent: Datatug Integration Developer**
+1. Implement inGitDB metadata provider for Datatug
+2. Create custom UI components for version control features
+3. Add CLI integration
+4. Write documentation and examples
+
+**Agent: Testing & QA Engineer**
+1. Create comprehensive integration test suite
+   - End-to-end tests across all components
+   - Test server `serve` command
+   - Test migration scripts with real databases
+   - Test triggers with webhooks and CLI commands
+   - Test access policies and permission enforcement
+   - Test DALgo adapter with sample applications
+   - Test Datatug integration with UI and CLI
+2. Performance testing
+3. Security testing
+4. Load testing
+
+**Deliverables**:
+- ✅ ingitdb-go with `serve` command
+- ✅ DB migration scripts generator
+- ✅ Triggers system implementation
+- ✅ Access management and RBAC
+- ✅ dalgo2ingitdb adapter package
+- ✅ Datatug integration plugin
+- ✅ Comprehensive integration test suite
 
 ---
 
@@ -710,6 +1782,7 @@ Tools:
 - Version alignment in package releases
 
 ### Between Go CLI and Server
+- Server is implemented as `serve` command in ingitdb-go CLI
 - Shared validation logic
 - Compatible data formats
 - Shared schema definitions
@@ -720,19 +1793,50 @@ Tools:
 - Can optionally integrate with server for advanced features
 - Workflows trigger on data changes
 
+### DB Migration Scripts Generator
+- Depends on ingitdb-go core library
+- Integrates with target database drivers
+- Uses schema definitions from inGitDB
+- Can work standalone or as part of CI/CD pipeline
+
+### Triggers System
+- Integrated into both CLI and server
+- Depends on webhook HTTP clients
+- Uses CLI execution capabilities
+- Integrates with access management for security
+
+### Access Management
+- Core component of server (`serve` command)
+- Required by all authenticated operations
+- Integrates with identity providers
+- Used by triggers for authorization
+
+### DALgo Adapter (dalgo2ingitdb)
+- Depends on ingitdb-go client library or server API
+- Implements dal-go interface
+- Can be used independently in dal-go applications
+- Provides abstraction layer over inGitDB
+
+### Datatug Integration
+- Depends on inGitDB metadata API
+- Integrates with Datatug core
+- Provides custom UI components
+- Uses access management for permissions
+
 ---
 
 ## Technology Stack Recommendations
 
-### Server
-- **Runtime**: Node.js 18+ with TypeScript or Go 1.21+
-- **Framework**: Express/Fastify (Node) or Gin/Echo (Go)
-- **Git Library**: nodegit/isomorphic-git or go-git
-- **Validation**: JSON Schema (ajv) or Go validator
-- **Database**: File-based (JSON/YAML), optional SQLite for metadata
-- **Auth**: JWT tokens
-- **Testing**: Jest (Node) or Go testing
+### Go CLI with Server
+- **Language**: Go 1.21+
+- **Server Framework**: Gin or Echo (for `serve` command)
+- **Git Library**: go-git
+- **Validation**: Go validator, JSON Schema
+- **Storage**: File-based (JSON/YAML), optional SQLite for indexes
+- **Auth**: JWT tokens, OAuth 2.0/OIDC support
+- **Testing**: Go testing, testify
 - **Containerization**: Docker
+- **CLI Framework**: Cobra or urfave/cli
 
 ### TypeScript Client
 - **Language**: TypeScript 5+
@@ -748,6 +1852,37 @@ Tools:
 - **Runtime**: Node.js 20
 - **Libraries**: @actions/core, @actions/github, @actions/exec
 - **CLI**: ingitdb-go binary
+
+### DB Migration Scripts Generator
+- **Language**: Go (part of ingitdb-go)
+- **SQL Drivers**: lib/pq (PostgreSQL), go-sql-driver/mysql, mattn/go-sqlite3
+- **Key-Value Drivers**: go-redis, etcd client
+- **Template Engine**: text/template for script generation
+
+### Triggers System
+- **Language**: Go (part of ingitdb-go)
+- **HTTP Client**: standard net/http with retry logic
+- **Script Execution**: os/exec with sandboxing
+- **Configuration**: YAML parsing with gopkg.in/yaml.v3
+
+### Access Management
+- **Language**: Go (part of ingitdb-go)
+- **Auth Libraries**: golang-jwt/jwt, oauth2
+- **Password Hashing**: bcrypt, argon2
+- **Policy Engine**: casbin or custom implementation
+- **Storage**: File-based or database
+
+### DALgo Adapter
+- **Language**: Go
+- **Framework**: dal-go interface
+- **Client**: ingitdb-go client library
+- **Testing**: Go testing with dal-go test suite
+
+### Datatug Integration
+- **Language**: Go for provider, TypeScript for UI components
+- **Framework**: Datatug plugin system
+- **UI**: React components
+- **Testing**: Go testing, React Testing Library
 
 ---
 
@@ -799,25 +1934,112 @@ Tools:
 
 ---
 
+## Core Features Checklist
+
+This section outlines essential features that must be present in the v1.0 release:
+
+### Data Management
+- ✅ CRUD operations for databases, tables, and records
+- ✅ JSON and YAML file storage formats
+- ✅ Schema definition and validation (JSON Schema)
+- ✅ Referential integrity checks (basic)
+- ⚠️ Schema versioning and evolution (should be included in Phase 2)
+- ⚠️ Data validation rules engine (beyond JSON schema - should be in Phase 2)
+- ⚠️ Conflict resolution strategies for Git merges (should be in Phase 2)
+
+### Version Control
+- ✅ Git-based versioning
+- ✅ Branch operations (create, switch, merge)
+- ✅ Commit history and diffs
+- ⚠️ Conflict detection and resolution UI/API (should be in Phase 2)
+- ⚠️ Cherry-pick operations (can be future enhancement)
+
+### API & Interfaces
+- ✅ RESTful API with OpenAPI specification
+- ✅ TypeScript client library
+- ✅ Go CLI with full functionality
+- ✅ `serve` command for HTTP server
+- ⚠️ CLI autocomplete support (nice to have for Phase 2-3)
+
+### Security & Access Control
+- ✅ Authentication (JWT, API keys)
+- ✅ Authorization and RBAC
+- ✅ Access policies (database, table, record level)
+- ⚠️ Audit logging for all operations (should be in Phase 7)
+- ⚠️ Encryption support (can be v2.0+)
+
+### Integration & Automation
+- ✅ GitHub Actions integration
+- ✅ Triggers system (webhooks, CLI commands)
+- ✅ DB migration scripts generator
+- ✅ DALgo client adapter
+- ✅ Datatug integration
+
+### Operations & Monitoring
+- ⚠️ Prometheus metrics endpoint (should be in Phase 2)
+- ⚠️ Structured logging (should be in Phase 2)
+- ⚠️ Health check endpoints (should be in Phase 2)
+- ⚠️ Performance profiling tools (can be Phase 6)
+- ⚠️ Backup and restore procedures (documentation in Phase 5)
+
+### Developer Experience
+- ✅ Comprehensive documentation
+- ✅ OpenAPI specification
+- ✅ Code examples and tutorials
+- ⚠️ Configuration management (.ingitdb.yaml) (should be in Phase 2)
+- ⚠️ Development mock server (can be Phase 3)
+- ⚠️ Test data generators (can be Phase 4)
+
+### Testing & Quality
+- ✅ Unit tests (80%+ coverage)
+- ✅ Integration tests
+- ✅ Contract tests (client-server)
+- ✅ End-to-end tests
+- ✅ Security testing
+- ⚠️ Performance benchmarks (should be in Phase 6)
+- ⚠️ Load testing results (should be in Phase 6)
+
+### Notes:
+- ✅ = Explicitly covered in current plan
+- ⚠️ = Should be added or clarified in the plan
+- Features marked "should be" need to be explicitly called out in the relevant phases
+
+---
+
 ## Future Enhancements (Post v1.0)
 
-### Features
+### v1.x Features (Planned in Phase 7)
+- ✅ Server as `serve` command in ingitdb-go CLI
+- ✅ DB migration scripts generator
+- ✅ Triggers system (webhooks and CLI commands)
+- ✅ Access management and RBAC
+- ✅ DALgo client integration (dalgo2ingitdb)
+- ✅ Datatug integration for Web UI and CLI viewer
+- ✅ Comprehensive integration tests
+
+### v2.0+ Features
 - Real-time collaboration with WebSockets
 - GraphQL API alongside REST
-- Query language (SQL-like)
-- Data replication and synchronization
-- Backup and restore automation
-- Web UI for data management
-- Python and other language clients
-- Encryption at rest
-- Role-based access control (RBAC)
+- Query language (SQL-like or enhanced filtering)
+- Data replication and synchronization across instances
+- Automated backup and restore
+- Advanced Web UI for data management
+- Python, Ruby, and other language clients
+- Encryption at rest and in transit
+- Advanced RBAC with custom roles and policies
+- Multi-tenancy support
+- API rate limiting and quotas
+- Data versioning and time-travel queries UI
 
 ### Integrations
-- Webhook support for external systems
-- Import/export from other databases
-- Integration with BI tools
-- Slack/Discord notifications
-- Terraform provider
+- ~~Webhook support for external systems~~ ✅ Included in triggers
+- Import/export from other databases (MySQL, PostgreSQL dumps)
+- Integration with BI tools (Tableau, PowerBI)
+- Slack/Discord notifications via webhooks
+- Terraform provider for infrastructure as code
+- Kubernetes operator for deployment
+- Prometheus metrics exporter
+- OpenTelemetry tracing integration
 
 ---
 
@@ -829,12 +2051,23 @@ Tools:
 - [Git Internals](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
 - [RESTful API Design](https://restfulapi.net/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [dal-go Framework](https://github.com/dal-go) - Database abstraction layer
+- [Datatug](https://github.com/datatug) - Database management and exploration tool
+- [Casbin](https://casbin.org/) - Authorization library for access control
+- [JWT Tokens](https://jwt.io/) - JSON Web Tokens for authentication
+- [OAuth 2.0 / OIDC](https://oauth.net/2/) - Authentication and authorization protocols
 
 ### Similar Projects for Inspiration
 - Dolt (versioned SQL database)
 - DVC (Data Version Control)
 - LakeFS (data lake version control)
 - Datasette (JSON/CSV database)
+- Liquibase (database migration tool)
+- Flyway (database version control)
+
+### Integration Partners
+- [dal-go](https://github.com/dal-go) - Database abstraction layer for Go
+- [Datatug](https://github.com/datatug) - Database explorer and management UI
 
 ### Community
 - GitHub Discussions: For Q&A and feature requests
