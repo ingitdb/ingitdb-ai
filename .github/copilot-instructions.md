@@ -9,13 +9,14 @@ This repository (`ingitdb-ai`) contains planning and architecture documents only
 
 ## Key Files
 
-| File | Content |
+| Path | Content |
 |------|---------|
 | `AGENTS.md` | Central AI agent guidelines — **read this first** |
-| `development-plan.md` | 6 AI agents, prompts, execution plan, tech stack |
-| `openapi-spec.yaml` | REST API specification (OpenAPI 3.0, 25+ endpoints) |
-| `ingitdb-ts-architecture.md` | TypeScript client architecture and design |
-| `github-actions-integration.md` | CI/CD workflows and custom GitHub Actions |
+| `docs/dev-plan/` | 6 AI agents, prompts, execution plan, tech stack |
+| `docs/openapi-spec.yaml` | REST API specification (OpenAPI 3.0, 25+ endpoints) |
+| `docs/ingitdb-ts-architecture.md` | TypeScript client architecture and design |
+| `docs/github-actions-integration.md` | CI/CD workflows and custom GitHub Actions |
+| `ai/prompts/` | 10 ready-to-use development task prompts |
 
 ## Technology Context
 
@@ -27,7 +28,7 @@ This repository (`ingitdb-ai`) contains planning and architecture documents only
 ## Constraints
 
 - This is a documentation repo — do not generate application source code
-- Do not modify `openapi-spec.yaml` unless explicitly asked
+- Do not modify `docs/openapi-spec.yaml` unless explicitly asked
 - Use Markdown with Mermaid diagrams for visualizations
 - Follow Conventional Commits: `<type>(<scope>): <description>`
 - Reference existing docs instead of duplicating content

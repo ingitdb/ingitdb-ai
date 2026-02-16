@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(keybindings-help)",
+      "WebSearch",
+      "Bash(wc:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
+      "Bash(git mv:*)",
+      "Bash(git rm:*)"
+    ]
+  }
+}

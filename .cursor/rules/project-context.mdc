@@ -16,18 +16,19 @@ It contains **documentation only**: Markdown files, an OpenAPI spec (YAML), and 
 ## Key Documents
 
 - `AGENTS.md` — Central AI agent guidelines (single source of truth)
-- `development-plan.md` — Agent roles, prompts, 6-phase plan, tech stack, risks
-- `openapi-spec.yaml` — Complete REST API specification (OpenAPI 3.0)
-- `ingitdb-ts-architecture.md` — TypeScript client architecture
-- `github-actions-integration.md` — CI/CD workflows and custom actions
+- `docs/dev-plan/` — Agent roles, prompts, 6-phase plan, tech stack, risks
+- `docs/openapi-spec.yaml` — Complete REST API specification (OpenAPI 3.0)
+- `docs/ingitdb-ts-architecture.md` — TypeScript client architecture
+- `docs/github-actions-integration.md` — CI/CD workflows and custom actions
+- `ai/prompts/` — 10 ready-to-use development task prompts
 
 ## Constraints
 
 - Do NOT create application source code (`.ts`, `.go`, `.js`) in this repo
-- Do NOT modify `openapi-spec.yaml` unless explicitly instructed
+- Do NOT modify `docs/openapi-spec.yaml` unless explicitly instructed
 - Reference existing docs rather than duplicating content
 - Use relative links between documents
-- Update `SUMMARY.md` when adding deliverables
+- Update `docs/summary.md` when adding deliverables
 
 ## Tech Stack (for implementation repos)
 

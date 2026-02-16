@@ -59,19 +59,19 @@ graph TB
 
 This is a **documentation-only** repository. Every file is a planning artifact:
 
-| File | Purpose |
+| Path | Purpose |
 |------|---------|
 | `README.md` | Project overview, navigation, quick start |
-| `SUMMARY.md` | Status of all deliverables, next steps |
-| `QUICK-REFERENCE.md` | Role-based navigation guide |
-| `development-plan.md` | Skills matrix, 6 AI agents, prompts, 6-phase execution plan, tech stack, risks |
-| `openapi-spec.yaml` | Complete OpenAPI 3.0 specification (25+ endpoints) |
-| `ingitdb-ts-architecture.md` | TypeScript client design, fluent API, query builder |
-| `github-actions-integration.md` | CI/CD workflows, custom actions, validation |
-| `prompts/` | 10 development task prompts, one per file (extracted from development-plan.md) |
-| `LICENSE` | CC0 1.0 Universal |
 | `AGENTS.md` | This file — AI agent guidelines |
 | `CLAUDE.md` | Claude Code agent configuration |
+| `docs/` | All planning and architecture documents |
+| `docs/dev-plan/` | Skills matrix, 6 AI agents, prompts, 6-phase execution plan, tech stack, risks |
+| `docs/openapi-spec.yaml` | Complete OpenAPI 3.0 specification (25+ endpoints) |
+| `docs/ingitdb-ts-architecture.md` | TypeScript client design, fluent API, query builder |
+| `docs/github-actions-integration.md` | CI/CD workflows, custom actions, validation |
+| `docs/summary.md` | Status of all deliverables, next steps |
+| `ai/prompts/` | 10 development task prompts, one per file |
+| `LICENSE` | CC0 1.0 Universal |
 | `.github/copilot-instructions.md` | GitHub Copilot agent configuration |
 | `.cursor/rules/*.mdc` | Cursor agent rules |
 | `.windsurfrules` | Windsurf agent configuration |
@@ -150,13 +150,13 @@ gantt
 | 5 | 9-10 | Documentation & Polish | Documentation Writer |
 | 6 | 11-12 | Testing & Release | Testing & QA Engineer |
 
-For full details see [`development-plan.md`](./development-plan.md#execution-plan).
+For full details see the [Development Plan](./docs/dev-plan/#execution-plan).
 
 ---
 
 ## AI Agent Roles
 
-Six specialized agents are defined in [`development-plan.md`](./development-plan.md#ai-agents--responsibilities):
+Six specialized agents are defined in the [Development Plan](./docs/dev-plan/#ai-agents--responsibilities):
 
 ```mermaid
 graph LR
@@ -352,7 +352,7 @@ Format: `<type>(<scope>): <description>`
 
 ## Quality Metrics & Performance Targets
 
-From [`development-plan.md`](./development-plan.md#success-metrics):
+From the [Development Plan](./docs/dev-plan/#success-metrics):
 
 ### Performance
 
@@ -395,12 +395,12 @@ All detailed specifications live in this repository:
 
 | Document | What to Find There |
 |----------|-------------------|
-| [`development-plan.md`](./development-plan.md) | Agent roles, prompts, execution plan, skills matrix, risks |
-| [`openapi-spec.yaml`](./openapi-spec.yaml) | Complete API contract — endpoints, schemas, auth |
-| [`ingitdb-ts-architecture.md`](./ingitdb-ts-architecture.md) | Client design, fluent API, query builder, error handling |
-| [`github-actions-integration.md`](./github-actions-integration.md) | CI/CD workflows, custom actions, validation rules |
-| [`QUICK-REFERENCE.md`](./QUICK-REFERENCE.md) | Role-based navigation, search by topic |
-| [`SUMMARY.md`](./SUMMARY.md) | Deliverable status, next steps, statistics |
+| [`docs/dev-plan/`](./docs/dev-plan/) | Agent roles, prompts, execution plan, skills matrix, risks |
+| [`docs/openapi-spec.yaml`](./docs/openapi-spec.yaml) | Complete API contract — endpoints, schemas, auth |
+| [`docs/ingitdb-ts-architecture.md`](./docs/ingitdb-ts-architecture.md) | Client design, fluent API, query builder, error handling |
+| [`docs/github-actions-integration.md`](./docs/github-actions-integration.md) | CI/CD workflows, custom actions, validation rules |
+| [`docs/summary.md`](./docs/summary.md) | Deliverable status, next steps, statistics |
+| [`ai/prompts/`](./ai/prompts/) | 10 development task prompts |
 | [`README.md`](./README.md) | Project overview, architecture diagram, quick start |
 
 ### External Links
@@ -416,9 +416,9 @@ All detailed specifications live in this repository:
 Since this is a **planning/documentation repo** (no application code):
 
 1. **Do not create source code files** (`.ts`, `.go`, `.js`) — those belong in implementation repos
-2. **Do not modify `openapi-spec.yaml`** unless explicitly instructed — it is a versioned contract
+2. **Do not modify `docs/openapi-spec.yaml`** unless explicitly instructed — it is a versioned contract
 3. **Preserve existing document structure** — add sections, don't reorganize
 4. **Use relative links** between documents in this repo
 5. **Keep Mermaid diagrams** up to date when architecture changes
-6. **Update `SUMMARY.md`** when adding new deliverables
+6. **Update `docs/summary.md`** when adding new deliverables
 7. **Reference, don't duplicate** — point to existing docs rather than copying content

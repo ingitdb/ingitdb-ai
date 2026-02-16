@@ -7,7 +7,7 @@ This repository provides comprehensive planning and architecture documentation f
 ## Completed Deliverables
 
 ### 1. Development Plan (22 KB, 843 lines)
-**File**: `development-plan.md`
+**File**: [`dev-plan/`](./dev-plan/)
 
 **Contents**:
 - **Skills Matrix**: Comprehensive list of required skills across backend, frontend, DevOps, and testing
@@ -36,7 +36,7 @@ This repository provides comprehensive planning and architecture documentation f
 - Comprehensive technology recommendations
 
 ### 2. OpenAPI Specification (34 KB, 1,319 lines)
-**File**: `openapi-spec.yaml`
+**File**: [`openapi-spec.yaml`](./openapi-spec.yaml)
 
 **Contents**:
 - **Complete REST API** specification (OpenAPI 3.0.3)
@@ -58,7 +58,7 @@ This repository provides comprehensive planning and architecture documentation f
 - Support for JSON and YAML content types
 
 ### 3. TypeScript Client Architecture (30 KB, 1,234 lines)
-**File**: `ingitdb-ts-architecture.md`
+**File**: [`ingitdb-ts-architecture.md`](./ingitdb-ts-architecture.md)
 
 **Contents**:
 - **Design Goals**: Type safety, DX, performance, testing, compatibility
@@ -86,7 +86,7 @@ This repository provides comprehensive planning and architecture documentation f
 - Tree-shakeable exports
 
 ### 4. GitHub Actions Integration (26 KB, 1,001 lines)
-**File**: `github-actions-integration.md`
+**File**: [`github-actions-integration.md`](./github-actions-integration.md)
 
 **Contents**:
 - **2 Custom Actions**:
@@ -112,7 +112,7 @@ This repository provides comprehensive planning and architecture documentation f
 - Multi-environment support
 
 ### 5. Updated README (8.8 KB, 238 lines)
-**File**: `README.md`
+**File**: [`README.md`](../README.md)
 
 **Contents**:
 - **Project Overview**: What is inGitDB and its components
@@ -133,35 +133,35 @@ This repository provides comprehensive planning and architecture documentation f
 
 | Document | Size | Lines | Focus Area |
 |----------|------|-------|------------|
-| development-plan.md | 22 KB | 843 | Overall strategy & execution |
-| openapi-spec.yaml | 34 KB | 1,319 | API specification |
-| ingitdb-ts-architecture.md | 30 KB | 1,234 | Client library design |
-| github-actions-integration.md | 26 KB | 1,001 | CI/CD workflows |
-| README.md | 8.8 KB | 238 | Navigation & overview |
+| `docs/dev-plan/` | 22 KB | 843 | Overall strategy & execution |
+| `docs/openapi-spec.yaml` | 34 KB | 1,319 | API specification |
+| `docs/ingitdb-ts-architecture.md` | 30 KB | 1,234 | Client library design |
+| `docs/github-actions-integration.md` | 26 KB | 1,001 | CI/CD workflows |
+| `README.md` | 8.8 KB | 238 | Navigation & overview |
 | **TOTAL** | **121 KB** | **4,635** | Complete ecosystem |
 
 ## How to Use These Documents
 
 ### For Project Managers
-1. Start with **README.md** for overview
-2. Review **development-plan.md** execution plan for timeline
+1. Start with the root **README.md** for overview
+2. Review the [Development Plan](./dev-plan/) execution plan for timeline
 3. Use the skills matrix to plan team composition
 4. Track progress using the 6-phase structure
 
 ### For AI Agents
-1. Read your assigned agent section in **development-plan.md**
-2. Use the provided prompts as starting points
+1. Read your assigned agent section in the [Development Plan](./dev-plan/)
+2. Use the [prompts](../ai/prompts/) as starting points
 3. Reference the architecture documents for implementation details
 4. Follow the technology stack recommendations
 
 ### For Developers
-1. Review **openapi-spec.yaml** to understand the API
-2. Use **ingitdb-ts-architecture.md** for client implementation
-3. Implement **github-actions-integration.md** workflows for CI/CD
+1. Review [openapi-spec.yaml](./openapi-spec.yaml) to understand the API
+2. Use [ingitdb-ts-architecture.md](./ingitdb-ts-architecture.md) for client implementation
+3. Implement [github-actions-integration.md](./github-actions-integration.md) workflows for CI/CD
 4. Follow best practices in each document
 
 ### For DevOps Engineers
-1. Focus on **github-actions-integration.md**
+1. Focus on [github-actions-integration.md](./github-actions-integration.md)
 2. Set up validation workflows first
 3. Configure `.ingitdb.yaml` for your project
 4. Implement release automation

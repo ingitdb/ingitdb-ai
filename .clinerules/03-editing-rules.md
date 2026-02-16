@@ -13,14 +13,14 @@ This repository contains planning and architecture documents only.
 - Use Mermaid diagrams for architecture and flow visualization
 - Use tables for structured comparisons
 - Reference existing docs instead of duplicating content
-- Update `SUMMARY.md` when adding new deliverables
+- Update `docs/summary.md` when adding new deliverables
 - Keep Mermaid diagrams up to date when architecture changes
 - End files with a single newline
 
 ## Do Not
 
 - Create application source code files (`.ts`, `.go`, `.js`) in this repo
-- Modify `openapi-spec.yaml` unless explicitly instructed
+- Modify `docs/openapi-spec.yaml` unless explicitly instructed
 - Reorganize or rename existing documents without explicit approval
 - Duplicate content that already exists in another document
 - Add trailing whitespace

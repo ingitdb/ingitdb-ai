@@ -298,20 +298,20 @@ This document outlines the skills, agents, prompts, and execution plans required
 
 ## Prompts for Development Tasks
 
-Each prompt is maintained as a separate file in the [`prompts/`](./prompts/) directory:
+Each prompt is maintained as a separate file in the [`ai/prompts/`](../../ai/prompts/) directory:
 
 | # | Prompt | Agent | File |
 |---|--------|-------|------|
-| 1 | OpenAPI Specification Design | API Architect | [`01-openapi-specification-design.md`](./prompts/01-openapi-specification-design.md) |
-| 2 | Server Implementation | Server Backend Developer | [`02-server-implementation.md`](./prompts/02-server-implementation.md) |
-| 3 | TypeScript Client Development | TypeScript Client Developer | [`03-typescript-client-development.md`](./prompts/03-typescript-client-development.md) |
-| 4 | GitHub Actions Integration | DevOps & Integration Engineer | [`04-github-actions-integration.md`](./prompts/04-github-actions-integration.md) |
-| 5 | Testing Strategy | Testing & QA Engineer | [`05-testing-strategy.md`](./prompts/05-testing-strategy.md) |
-| 6 | DB Migration Scripts Generator | Integration Engineer | [`06-db-migration-scripts-generator.md`](./prompts/06-db-migration-scripts-generator.md) |
-| 7 | inGitDB Triggers System | Integration Engineer | [`07-triggers-system.md`](./prompts/07-triggers-system.md) |
-| 8 | Access Management Policy | Integration Engineer | [`08-access-management-policy.md`](./prompts/08-access-management-policy.md) |
-| 9 | DALgo Client Integration | Integration Engineer | [`09-dalgo-client-integration.md`](./prompts/09-dalgo-client-integration.md) |
-| 10 | Datatug Integration | Integration Engineer | [`10-datatug-integration.md`](./prompts/10-datatug-integration.md) |
+| 1 | OpenAPI Specification Design | API Architect | [`01-openapi-specification-design.md`](../../ai/prompts/01-openapi-specification-design.md) |
+| 2 | Server Implementation | Server Backend Developer | [`02-server-implementation.md`](../../ai/prompts/02-server-implementation.md) |
+| 3 | TypeScript Client Development | TypeScript Client Developer | [`03-typescript-client-development.md`](../../ai/prompts/03-typescript-client-development.md) |
+| 4 | GitHub Actions Integration | DevOps & Integration Engineer | [`04-github-actions-integration.md`](../../ai/prompts/04-github-actions-integration.md) |
+| 5 | Testing Strategy | Testing & QA Engineer | [`05-testing-strategy.md`](../../ai/prompts/05-testing-strategy.md) |
+| 6 | DB Migration Scripts Generator | Integration Engineer | [`06-db-migration-scripts-generator.md`](../../ai/prompts/06-db-migration-scripts-generator.md) |
+| 7 | inGitDB Triggers System | Integration Engineer | [`07-triggers-system.md`](../../ai/prompts/07-triggers-system.md) |
+| 8 | Access Management Policy | Integration Engineer | [`08-access-management-policy.md`](../../ai/prompts/08-access-management-policy.md) |
+| 9 | DALgo Client Integration | Integration Engineer | [`09-dalgo-client-integration.md`](../../ai/prompts/09-dalgo-client-integration.md) |
+| 10 | Datatug Integration | Integration Engineer | [`10-datatug-integration.md`](../../ai/prompts/10-datatug-integration.md) |
 
 ---
 

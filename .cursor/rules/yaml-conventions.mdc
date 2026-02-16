@@ -22,6 +22,6 @@ globs: "**/*.yaml"
 
 ## Important
 
-- `openapi-spec.yaml` is a versioned API contract
+- `docs/openapi-spec.yaml` is a versioned API contract
 - Do NOT modify it unless explicitly instructed
 - Any changes must maintain backward compatibility unless a breaking change is approved

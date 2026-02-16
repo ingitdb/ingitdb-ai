@@ -12,15 +12,15 @@ inGitDB is an open-source versioned database for collaboration that stores data 
 
 ## Key Documents
 
-| File | Content |
+| Path | Content |
 |------|---------|
 | `AGENTS.md` | Central AI agent guidelines — **read this for full context** |
-| `development-plan.md` | 6 AI agents, prompts, 6-phase execution plan, tech stack, risks |
-| `openapi-spec.yaml` | Complete REST API specification (OpenAPI 3.0, 25+ endpoints) |
-| `ingitdb-ts-architecture.md` | TypeScript client architecture and design |
-| `github-actions-integration.md` | CI/CD workflows and custom GitHub Actions |
-| `QUICK-REFERENCE.md` | Role-based navigation guide |
-| `SUMMARY.md` | Deliverable status and next steps |
+| `docs/dev-plan/` | 6 AI agents, prompts, 6-phase execution plan, tech stack, risks |
+| `docs/openapi-spec.yaml` | Complete REST API specification (OpenAPI 3.0, 25+ endpoints) |
+| `docs/ingitdb-ts-architecture.md` | TypeScript client architecture and design |
+| `docs/github-actions-integration.md` | CI/CD workflows and custom GitHub Actions |
+| `docs/summary.md` | Deliverable status and next steps |
+| `ai/prompts/` | 10 ready-to-use development task prompts |
 
 ## Architecture
 

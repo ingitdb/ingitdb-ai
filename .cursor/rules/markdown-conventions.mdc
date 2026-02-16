@@ -25,4 +25,4 @@ globs: "**/*.md"
 - Reference existing docs instead of duplicating content
 - Preserve existing document structure — add sections, don't reorganize
 - Keep Mermaid diagrams up to date when architecture changes
-- Update `SUMMARY.md` when adding new deliverables
+- Update `docs/summary.md` when adding new deliverables

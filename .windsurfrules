@@ -10,10 +10,11 @@ Documentation-only repo (ingitdb-ai). Contains planning artifacts — no applica
 
 Key files:
 - AGENTS.md — Central AI agent guidelines (READ THIS for full context)
-- development-plan.md — 6 AI agents, prompts, 6-phase execution plan, tech stack, risks
-- openapi-spec.yaml — Complete REST API spec (OpenAPI 3.0, 25+ endpoints)
-- ingitdb-ts-architecture.md — TypeScript client design, fluent API, query builder
-- github-actions-integration.md — CI/CD workflows, custom GitHub Actions
+- docs/dev-plan/ — 6 AI agents, prompts, 6-phase execution plan, tech stack, risks
+- docs/openapi-spec.yaml — Complete REST API spec (OpenAPI 3.0, 25+ endpoints)
+- docs/ingitdb-ts-architecture.md — TypeScript client design, fluent API, query builder
+- docs/github-actions-integration.md — CI/CD workflows, custom GitHub Actions
+- ai/prompts/ — 10 ready-to-use development task prompts
 
 ## Architecture
 Components: ingitdb-server (REST API), ingitdb-ts (TS client), ingitdb-go (Go CLI), GitHub Actions (validation)
@@ -27,10 +28,10 @@ CI/CD: GitHub Actions, Docker, @actions/core
 
 ## Constraints
 - Do NOT create application source code (.ts, .go, .js) in this repo
-- Do NOT modify openapi-spec.yaml unless explicitly instructed
+- Do NOT modify docs/openapi-spec.yaml unless explicitly instructed
 - Reference existing docs instead of duplicating content
 - Use relative links between documents
-- Update SUMMARY.md when adding deliverables
+- Update docs/summary.md when adding deliverables
 
 ## Code Conventions
 TypeScript: strict mode, named exports, async/await, ESLint+Prettier, JSDoc on public APIs
@@ -48,7 +49,7 @@ Scopes: api, server, client, actions, docs
 Test coverage: 80%+ | API response p95: <100ms | Concurrent users: 1000+
 Critical vulnerabilities: 0 | API uptime: 99.9% | Doc coverage: 100%
 
-## AI Agent Roles (6 agents defined in development-plan.md)
+## AI Agent Roles (6 agents defined in docs/dev-plan/)
 1. API Architect — OpenAPI spec design
 2. Server Backend Developer — Server implementation
 3. TypeScript Client Developer — ingitdb-ts NPM package

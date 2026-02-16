@@ -9,17 +9,18 @@ This repository (`ingitdb-ai`) contains **planning documents only** — no appli
 
 ## Key Documents
 
-- `development-plan.md` — Agent roles, prompts, 6-phase execution plan, tech stack
-- `openapi-spec.yaml` — Complete REST API specification (25+ endpoints, OpenAPI 3.0)
-- `ingitdb-ts-architecture.md` — TypeScript client design and fluent API
-- `github-actions-integration.md` — CI/CD workflows and custom GitHub Actions
 - `AGENTS.md` — Central AI agent guidelines (start here for full context)
+- `docs/dev-plan/` — Agent roles, prompts, 6-phase execution plan, tech stack
+- `docs/openapi-spec.yaml` — Complete REST API specification (25+ endpoints, OpenAPI 3.0)
+- `docs/ingitdb-ts-architecture.md` — TypeScript client design and fluent API
+- `docs/github-actions-integration.md` — CI/CD workflows and custom GitHub Actions
+- `ai/prompts/` — 10 ready-to-use development task prompts
 
 ## Repository Boundaries
 
 - This is a documentation-only repo: no `.ts`, `.go`, or `.js` source files
 - Do NOT create application source code here
-- Do NOT modify `openapi-spec.yaml` unless explicitly instructed
+- Do NOT modify `docs/openapi-spec.yaml` unless explicitly instructed
 - Implementation belongs in separate repos: `ingitdb-server`, `ingitdb-ts`, `ingitdb-go`
 
 ## Editing Rules
@@ -28,7 +29,7 @@ This repository (`ingitdb-ai`) contains **planning documents only** — no appli
 - Use relative links between documents
 - Use Mermaid diagrams for architecture and flow visualization
 - Reference existing docs instead of duplicating content
-- Update `SUMMARY.md` when adding new deliverables
+- Update `docs/summary.md` when adding new deliverables
 - Follow Markdown conventions: ATX headers, one sentence per line, tables for structured data
 
 ## Code Conventions (for implementation repos)
