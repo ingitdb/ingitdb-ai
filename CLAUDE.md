@@ -5,7 +5,7 @@
 ## Project Overview
 
 inGitDB is an open-source versioned database storing data in text files (JSON, YAML, CSV) with Git-based version control.
-This repository (`ingitdb-ai`) contains **planning documents only** — no application source code.
+This repository (`ingitdb`) is the **main project hub** — planning, issues, AI prompts, and architecture documentation. No application source code.
 
 ## Key Documents
 
@@ -21,7 +21,7 @@ This repository (`ingitdb-ai`) contains **planning documents only** — no appli
 - This is a documentation-only repo: no `.ts`, `.go`, or `.js` source files
 - Do NOT create application source code here
 - Do NOT modify `docs/openapi-spec.yaml` unless explicitly instructed
-- Implementation belongs in separate repos: `ingitdb-server`, `ingitdb-ts`, `ingitdb-go`
+- Implementation belongs in separate repos: `ingitdb-go`, `ingitdb-ts`, `ingitdb-schema`
 
 ## Editing Rules
 

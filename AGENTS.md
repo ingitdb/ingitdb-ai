@@ -7,17 +7,17 @@
 
 ## Project Identity
 
-| Field | Value |
-|-------|-------|
-| **Name** | inGitDB |
-| **Description** | Open-source versioned database for collaboration that stores data in text files |
-| **Organization** | [github.com/ingitdb](https://github.com/ingitdb) |
-| **License (this repo)** | CC0 1.0 Universal |
-| **License (implementations)** | MIT |
-| **Status** | Planning & architecture phase |
+| Field                         | Value                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| **Name**                      | inGitDB                                                                         |
+| **Description**               | Open-source versioned database for collaboration that stores data in text files |
+| **Organization**              | [github.com/ingitdb](https://github.com/ingitdb)                                |
+| **License (this repo)**       | CC0 1.0 Universal                                                               |
+| **License (implementations)** | MIT                                                                             |
+| **Status**                    | Planning & architecture phase                                                   |
 
-This repository (`ingitdb-ai`) contains **planning documents only** — no application source code.
-Implementation happens in separate repositories (`ingitdb-server`, `ingitdb-ts`, etc.).
+This repository (`ingitdb`) is the **main project hub** — planning documents, issue tracking, AI prompts, and architecture specs.
+It contains no application source code. Implementation happens in separate repositories (`ingitdb-go`, `ingitdb-ts`, etc.).
 
 ---
 
@@ -57,25 +57,25 @@ graph TB
 
 ## Repository Map
 
-This is a **documentation-only** repository. Every file is a planning artifact:
+This is the **main project hub**. Every file is a planning artifact or coordination document:
 
-| Path | Purpose |
-|------|---------|
-| `README.md` | Project overview, navigation, quick start |
-| `AGENTS.md` | This file — AI agent guidelines |
-| `CLAUDE.md` | Claude Code agent configuration |
-| `docs/` | All planning and architecture documents |
-| `docs/dev-plan/` | Skills matrix, 6 AI agents, prompts, 6-phase execution plan, tech stack, risks |
-| `docs/openapi-spec.yaml` | Complete OpenAPI 3.0 specification (25+ endpoints) |
-| `docs/ingitdb-ts-architecture.md` | TypeScript client design, fluent API, query builder |
-| `docs/github-actions-integration.md` | CI/CD workflows, custom actions, validation |
-| `docs/summary.md` | Status of all deliverables, next steps |
-| `ai/prompts/` | 10 development task prompts, one per file |
-| `LICENSE` | CC0 1.0 Universal |
-| `.github/copilot-instructions.md` | GitHub Copilot agent configuration |
-| `.cursor/rules/*.mdc` | Cursor agent rules |
-| `.windsurfrules` | Windsurf agent configuration |
-| `.clinerules/*.md` | Cline agent configuration |
+| Path                                 | Purpose                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------ |
+| `README.md`                          | Project overview, ecosystem repos, navigation, quick start                     |
+| `AGENTS.md`                          | This file — AI agent guidelines                                                |
+| `CLAUDE.md`                          | Claude Code agent configuration                                                |
+| `docs/`                              | All planning and architecture documents                                        |
+| `docs/dev-plan/`                     | Skills matrix, 6 AI agents, prompts, 6-phase execution plan, tech stack, risks |
+| `docs/openapi-spec.yaml`             | Complete OpenAPI 3.0 specification (25+ endpoints)                             |
+| `docs/ingitdb-ts-architecture.md`    | TypeScript client design, fluent API, query builder                            |
+| `docs/github-actions-integration.md` | CI/CD workflows, custom actions, validation                                    |
+| `docs/summary.md`                    | Status of all deliverables, next steps                                         |
+| `ai/prompts/`                        | 10 development task prompts, one per file                                      |
+| `LICENSE`                            | CC0 1.0 Universal                                                              |
+| `.github/copilot-instructions.md`    | GitHub Copilot agent configuration                                             |
+| `.cursor/rules/*.mdc`                | Cursor agent rules                                                             |
+| `.windsurfrules`                     | Windsurf agent configuration                                                   |
+| `.clinerules/*.md`                   | Cline agent configuration                                                      |
 
 ---
 
@@ -141,14 +141,14 @@ gantt
     Testing & Release                :p6, after p5, 14d
 ```
 
-| Phase | Weeks | Focus | Lead Agent |
-|-------|-------|-------|------------|
-| 1 | 1-2 | API Design & OpenAPI Spec | API Architect |
-| 2 | 3-6 | Server Implementation | Server Backend Developer |
-| 3 | 5-7 | TypeScript Client | TypeScript Client Developer |
-| 4 | 7-8 | GitHub Actions Integration | DevOps & Integration Engineer |
-| 5 | 9-10 | Documentation & Polish | Documentation Writer |
-| 6 | 11-12 | Testing & Release | Testing & QA Engineer |
+| Phase | Weeks | Focus                      | Lead Agent                    |
+| ----- | ----- | -------------------------- | ----------------------------- |
+| 1     | 1-2   | API Design & OpenAPI Spec  | API Architect                 |
+| 2     | 3-6   | Server Implementation      | Server Backend Developer      |
+| 3     | 5-7   | TypeScript Client          | TypeScript Client Developer   |
+| 4     | 7-8   | GitHub Actions Integration | DevOps & Integration Engineer |
+| 5     | 9-10  | Documentation & Polish     | Documentation Writer          |
+| 6     | 11-12 | Testing & Release          | Testing & QA Engineer         |
 
 For full details see the [Development Plan](./docs/dev-plan/#execution-plan).
 
@@ -178,14 +178,14 @@ graph LR
     A3 -->|documents| A6
 ```
 
-| # | Agent | Primary Deliverable |
-|---|-------|-------------------|
-| 1 | API Architect | `openapi.yaml` |
-| 2 | Server Backend Developer | `ingitdb-server` implementation |
-| 3 | TypeScript Client Developer | `ingitdb-ts` NPM package |
-| 4 | Testing & QA Engineer | Test suites, contract tests, benchmarks |
-| 5 | DevOps & Integration Engineer | GitHub Actions workflows, Docker |
-| 6 | Documentation Writer | User guides, API reference, tutorials |
+| #   | Agent                         | Primary Deliverable                     |
+| --- | ----------------------------- | --------------------------------------- |
+| 1   | API Architect                 | `openapi.yaml`                          |
+| 2   | Server Backend Developer      | `ingitdb-server` implementation         |
+| 3   | TypeScript Client Developer   | `ingitdb-ts` NPM package                |
+| 4   | Testing & QA Engineer         | Test suites, contract tests, benchmarks |
+| 5   | DevOps & Integration Engineer | GitHub Actions workflows, Docker        |
+| 6   | Documentation Writer          | User guides, API reference, tutorials   |
 
 ---
 
@@ -250,7 +250,7 @@ ingitdb-server/
   docker/
     Dockerfile
     docker-compose.yaml
-  openapi.yaml       # Copied/symlinked from ingitdb-ai
+  openapi.yaml       # Copied/symlinked from ingitdb
   package.json
   tsconfig.json
 
@@ -299,16 +299,16 @@ Examples: `feature/record-pagination`, `fix/merge-conflict-handling`, `docs/api-
 
 Format: `<type>(<scope>): <description>`
 
-| Type | Usage |
-|------|-------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no code change |
+| Type       | Usage                                                   |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | New feature                                             |
+| `fix`      | Bug fix                                                 |
+| `docs`     | Documentation only                                      |
+| `style`    | Formatting, no code change                              |
 | `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `test` | Adding or correcting tests |
-| `chore` | Build process, CI, tooling |
-| `perf` | Performance improvement |
+| `test`     | Adding or correcting tests                              |
+| `chore`    | Build process, CI, tooling                              |
+| `perf`     | Performance improvement                                 |
 
 **Scope examples**: `api`, `server`, `client`, `actions`, `docs`
 
@@ -326,21 +326,21 @@ Format: `<type>(<scope>): <description>`
 
 ### Coverage Targets
 
-| Component | Minimum Coverage |
-|-----------|-----------------|
-| Server | 80% |
-| TypeScript Client | 80% |
-| GitHub Actions | Integration tests for all workflows |
+| Component         | Minimum Coverage                    |
+| ----------------- | ----------------------------------- |
+| Server            | 80%                                 |
+| TypeScript Client | 80%                                 |
+| GitHub Actions    | Integration tests for all workflows |
 
 ### Testing Tools
 
-| Tool | Purpose |
-|------|---------|
-| Jest | TypeScript/JavaScript unit & integration tests |
-| Go `testing` | Go unit tests |
-| Pact | Consumer-driven contract tests |
-| Artillery | Load and performance testing |
-| MSW | Mock Service Worker for client tests |
+| Tool         | Purpose                                        |
+| ------------ | ---------------------------------------------- |
+| Jest         | TypeScript/JavaScript unit & integration tests |
+| Go `testing` | Go unit tests                                  |
+| Pact         | Consumer-driven contract tests                 |
+| Artillery    | Load and performance testing                   |
+| MSW          | Mock Service Worker for client tests           |
 
 ### Test Naming
 
@@ -356,36 +356,36 @@ From the [Development Plan](./docs/dev-plan/#success-metrics):
 
 ### Performance
 
-| Metric | Target |
-|--------|--------|
-| API response (p95) | < 100 ms |
-| Concurrent users | 1,000+ |
-| Records per database | 10,000+ |
-| Git operations | < 5 seconds |
+| Metric               | Target      |
+| -------------------- | ----------- |
+| API response (p95)   | < 100 ms    |
+| Concurrent users     | 1,000+      |
+| Records per database | 10,000+     |
+| Git operations       | < 5 seconds |
 
 ### Quality
 
-| Metric | Target |
-|--------|--------|
-| Test coverage | 80%+ |
-| Critical security vulnerabilities | 0 |
-| API uptime | 99.9% |
-| Documentation coverage | 100% |
+| Metric                            | Target |
+| --------------------------------- | ------ |
+| Test coverage                     | 80%+   |
+| Critical security vulnerabilities | 0      |
+| API uptime                        | 99.9%  |
+| Documentation coverage            | 100%   |
 
 ---
 
 ## Key Technical Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| **Git as storage engine** | Native versioning, branching, merging — core differentiator |
-| **OpenAPI-first design** | Contract-driven; generate server stubs and client SDKs |
-| **JWT authentication** | Stateless, scalable, industry standard |
-| **JSON + YAML storage** | Human-readable, Git-diffable, widely supported |
-| **Text-file format** | Enables GitHub Actions validation via CLI without server |
-| **Separate repos per component** | Independent release cycles, clear ownership |
-| **TypeScript for client** | Largest ecosystem for API consumers |
-| **Go for CLI** | Fast compilation, single binary distribution, existing `ingitdb-go` |
+| Decision                         | Rationale                                                           |
+| -------------------------------- | ------------------------------------------------------------------- |
+| **Git as storage engine**        | Native versioning, branching, merging — core differentiator         |
+| **OpenAPI-first design**         | Contract-driven; generate server stubs and client SDKs              |
+| **JWT authentication**           | Stateless, scalable, industry standard                              |
+| **JSON + YAML storage**          | Human-readable, Git-diffable, widely supported                      |
+| **Text-file format**             | Enables GitHub Actions validation via CLI without server            |
+| **Separate repos per component** | Independent release cycles, clear ownership                         |
+| **TypeScript for client**        | Largest ecosystem for API consumers                                 |
+| **Go for CLI**                   | Fast compilation, single binary distribution, existing `ingitdb-go` |
 
 ---
 
@@ -393,15 +393,15 @@ From the [Development Plan](./docs/dev-plan/#success-metrics):
 
 All detailed specifications live in this repository:
 
-| Document | What to Find There |
-|----------|-------------------|
-| [`docs/dev-plan/`](./docs/dev-plan/) | Agent roles, prompts, execution plan, skills matrix, risks |
-| [`docs/openapi-spec.yaml`](./docs/openapi-spec.yaml) | Complete API contract — endpoints, schemas, auth |
-| [`docs/ingitdb-ts-architecture.md`](./docs/ingitdb-ts-architecture.md) | Client design, fluent API, query builder, error handling |
-| [`docs/github-actions-integration.md`](./docs/github-actions-integration.md) | CI/CD workflows, custom actions, validation rules |
-| [`docs/summary.md`](./docs/summary.md) | Deliverable status, next steps, statistics |
-| [`ai/prompts/`](./ai/prompts/) | 10 development task prompts |
-| [`README.md`](./README.md) | Project overview, architecture diagram, quick start |
+| Document                                                                     | What to Find There                                         |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [`docs/dev-plan/`](./docs/dev-plan/)                                         | Agent roles, prompts, execution plan, skills matrix, risks |
+| [`docs/openapi-spec.yaml`](./docs/openapi-spec.yaml)                         | Complete API contract — endpoints, schemas, auth           |
+| [`docs/ingitdb-ts-architecture.md`](./docs/ingitdb-ts-architecture.md)       | Client design, fluent API, query builder, error handling   |
+| [`docs/github-actions-integration.md`](./docs/github-actions-integration.md) | CI/CD workflows, custom actions, validation rules          |
+| [`docs/summary.md`](./docs/summary.md)                                       | Deliverable status, next steps, statistics                 |
+| [`ai/prompts/`](./ai/prompts/)                                               | 10 development task prompts                                |
+| [`README.md`](./README.md)                                                   | Project overview, architecture diagram, quick start        |
 
 ### External Links
 
@@ -413,7 +413,7 @@ All detailed specifications live in this repository:
 
 ## Rules for Editing This Repository
 
-Since this is a **planning/documentation repo** (no application code):
+Since this is the **main project hub** (no application code):
 
 1. **Do not create source code files** (`.ts`, `.go`, `.js`) — those belong in implementation repos
 2. **Do not modify `docs/openapi-spec.yaml`** unless explicitly instructed — it is a versioned contract
