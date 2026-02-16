@@ -220,9 +220,9 @@ cp github-actions-integration.md .github/workflows/
 
 This repository contains planning documents and specifications. For contributing to actual implementations:
 
-1. **Server**: See `ingitdb/ingitdb-server` (to be created)
-2. **TypeScript Client**: See `ingitdb/ingitdb-ts` (to be created)
-3. **GitHub Actions**: See `ingitdb/validate-ingitdb-action` (to be created)
+1. **CLI & Server**: See [`ingitdb/ingitdb-go`](https://github.com/ingitdb/ingitdb-go)
+2. **TypeScript Client**: See [`ingitdb/ingitdb-ts`](https://github.com/ingitdb/ingitdb-ts)
+3. **GitHub Actions**: See [`ingitdb/ingitdb-action`]([to be created](https://github.com/ingitdb/ingitdb-action))
 
 ## 📝 License
 
